@@ -150,7 +150,7 @@ class PengajuanController extends Controller
 
         return view('mahasiswa.pengajuan.edit', compact('pengajuan', 'ormawas', 'jenisSurats'));
     }
-    
+  
     public function update(Request $request, Pengajuan $pengajuan)
     {
         if ($pengajuan->user_id !== Auth::id()) {
@@ -168,7 +168,7 @@ class PengajuanController extends Controller
             'items.*.satuan' => 'required|string',
             'items.*.harga_satuan' => 'required|numeric|min:0',
         ]);
- 
+
         $totalRab = 0;
         foreach ($request->items as $item) {
             $totalRab += $item['jumlah'] * $item['harga_satuan'];

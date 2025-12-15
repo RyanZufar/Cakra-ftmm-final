@@ -5,11 +5,8 @@
     <title>Buat LPJ - CAKRA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- Fonts & Icons --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    {{-- Alpine.js (untuk baris dinamis) --}}
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
     <style>
@@ -234,7 +231,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">Buat Laporan Pertanggungjawaban (LPJ)</h1>
-        <p class="page-subtitle">Lengkapi realisasi biaya sesuai bukti/nota. Pastikan total tidak melebihi RAB.</p>
+        <p class="page-subtitle">Lengkapi realisasi biaya sesuai bukti/nota. Pastikan total SAMA PERSIS dengan RAB.</p>
     </div>
 
     {{-- Ringkasan Pengajuan --}}
@@ -255,7 +252,7 @@
         </div>
     </div>
 
-    {{-- Notifikasi Validasi Server --}}
+    {{-- Notifikasi --}}
     @if ($errors->any())
         <div class="alert alert-error mb-6">
             <strong>Periksa kembali input Anda:</strong>
@@ -273,12 +270,9 @@
     @endif
 
     {{-- FORM LPJ --}}
-    <div
-        class="card"
-        x-data="lpjCreate({ totalRab: {{ (float) $pengajuan->total_rab }} })"
-    >
+    <div class="card" x-data="lpjCreate({ totalRab: {{ (float) $pengajuan->total_rab }} })">
         <div class="form-title">Rincian Realisasi</div>
-        <p class="muted mb-4">Unggah nota untuk setiap pengeluaran (Gambar/PDF, maksimal 5MB). Link GDocs opsional (satu untuk seluruh LPJ).</p>
+        <p class="muted mb-4">Unggah nota untuk setiap pengeluaran. Link GDocs opsional.</p>
 
         <form method="POST"
               action="{{ route('mahasiswa.lpj.store', $pengajuan->pengajuan_id) }}"
@@ -286,16 +280,10 @@
               x-on:submit="return beforeSubmit()">
             @csrf
 
-            {{-- Link GDocs global (opsional) --}}
             <div class="mb-4">
                 <label for="link_gdocs" class="font-semibold">Link Google Docs</label>
-                <input type="url"
-                       id="link_gdocs"
-                       name="link_gdocs"
-                       value="{{ old('link_gdocs') }}"
-                       placeholder="https://docs.google.com/..."
-                       pattern="https?://.*">
-                <p class="muted" style="margin-top:6px">Satu link untuk keseluruhan LPJ. Pastikan aksesnya terbuka (viewer).</p>
+                <input type="url" id="link_gdocs" name="link_gdocs" value="{{ old('link_gdocs') }}" placeholder="https://docs.google.com/..." pattern="https?://.*">
+                <p class="muted" style="margin-top:6px">Satu link untuk keseluruhan LPJ.</p>
             </div>
 
             <div class="table-container">
@@ -313,58 +301,18 @@
                     <tbody>
                         <template x-for="(row, i) in rows" :key="i">
                             <tr>
-                                {{-- Nama --}}
-                                <td>
-                                    <input type="text"
-                                           :name="`items[${i}][nama_item]`"
-                                           x-model="row.nama_item"
-                                           placeholder="Mis. Konsumsi Panitia"
-                                           required>
-                                </td>
-
-                                {{-- Jumlah --}}
-                                <td class="text-center">
-                                    <input type="number"
-                                           min="1"
-                                           :name="`items[${i}][jumlah]`"
-                                           x-model.number="row.jumlah"
-                                           required>
-                                </td>
-
-                                {{-- Satuan --}}
-                                <td class="text-center">
-                                    <input type="text"
-                                           :name="`items[${i}][satuan]`"
-                                           x-model="row.satuan"
-                                           placeholder="Box/Unit/Lbr"
-                                           required>
-                                </td>
-
-                                {{-- Harga Satuan --}}
+                                <td><input type="text" :name="`items[${i}][nama_item]`" x-model="row.nama_item" placeholder="Item" required></td>
+                                <td class="text-center"><input type="number" min="1" :name="`items[${i}][jumlah]`" x-model.number="row.jumlah" required></td>
+                                <td class="text-center"><input type="text" :name="`items[${i}][satuan]`" x-model="row.satuan" placeholder="Pcs" required></td>
                                 <td class="text-right">
-                                    <input type="number"
-                                           min="0"
-                                           step="0.01"
-                                           :name="`items[${i}][harga_satuan]`"
-                                           x-model.number="row.harga_satuan"
-                                           required>
+                                    <input type="number" min="0" step="0.01" :name="`items[${i}][harga_satuan]`" x-model.number="row.harga_satuan" required>
                                     <div class="muted" style="font-size:.8rem;margin-top:6px" x-text="formatRupiah(row.jumlah * row.harga_satuan)"></div>
                                 </td>
-
-                                {{-- Nota (file) --}}
                                 <td class="text-center">
-                                    <input type="file"
-                                           :name="`items[${i}][nota]`"
-                                           accept="image/*,application/pdf"
-                                           required>
-                                    <div class="muted" style="font-size:.8rem;margin-top:6px">max 5MB</div>
+                                    <input type="file" :name="`items[${i}][nota]`" accept="image/*,application/pdf" required>
                                 </td>
-
-                                {{-- Aksi --}}
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-outline" x-on:click="remove(i)" x-show="rows.length > 1">
-                                        <span class="material-icons">delete</span> Hapus
-                                    </button>
+                                    <button type="button" class="btn btn-outline" x-on:click="remove(i)" x-show="rows.length > 1"><span class="material-icons">delete</span></button>
                                 </td>
                             </tr>
                         </template>
@@ -372,9 +320,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="6">
-                                <button type="button" class="btn btn-outline" x-on:click="add()">
-                                    <span class="material-icons">add</span> Tambah Baris
-                                </button>
+                                <button type="button" class="btn btn-outline" x-on:click="add()"><span class="material-icons">add</span> Tambah Baris</button>
                             </td>
                         </tr>
                         <tr>
@@ -385,18 +331,29 @@
                 </table>
             </div>
 
-            {{-- Warning jika over-budget --}}
-            <div class="mb-4" x-show="grandTotal() > totalRab">
-                <span class="warning">Total realisasi melebihi RAB sebesar <span x-text="formatRupiah(grandTotal() - totalRab)"></span>.</span>
+            {{-- WARNING KHUSUS (Validasi Strict) --}}
+            <div class="mb-4" x-show="grandTotal() != totalRab" style="display: none;">
+                {{-- Kasus Lebih --}}
+                <div x-show="grandTotal() > totalRab">
+                    <span class="warning">
+                        Total realisasi MELEBIHI RAB sebesar <span x-text="formatRupiah(grandTotal() - totalRab)"></span>.
+                    </span>
+                </div>
+                {{-- Kasus Kurang --}}
+                <div x-show="grandTotal() < totalRab">
+                    <span class="warning" style="color: #FBBF24;">
+                        Total realisasi KURANG dari RAB sebesar <span x-text="formatRupiah(totalRab - grandTotal())"></span>.
+                    </span>
+                </div>
             </div>
 
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary"
+                        :class="{ 'opacity-50 cursor-not-allowed': grandTotal() != totalRab }"
+                        :disabled="grandTotal() != totalRab">
                     <span class="material-icons">send</span> Kirim LPJ
                 </button>
-                <a href="{{ route('mahasiswa.lpj.index') }}" class="btn btn-ghost">
-                    <span class="material-icons">arrow_back</span> Kembali
-                </a>
+                <a href="{{ route('mahasiswa.lpj.index') }}" class="btn btn-ghost"><span class="material-icons">arrow_back</span> Kembali</a>
             </div>
         </form>
     </div>
@@ -406,27 +363,18 @@
 function lpjCreate({ totalRab }) {
     return {
         totalRab,
-        rows: [
-            { nama_item: '', jumlah: 1, satuan: '', harga_satuan: 0 }
-        ],
-        add() {
-            this.rows.push({ nama_item: '', jumlah: 1, satuan: '', harga_satuan: 0 });
-        },
-        remove(i) {
-            if (this.rows.length > 1) this.rows.splice(i, 1);
-        },
+        rows: [{ nama_item: '', jumlah: 1, satuan: '', harga_satuan: 0 }],
+        add() { this.rows.push({ nama_item: '', jumlah: 1, satuan: '', harga_satuan: 0 }); },
+        remove(i) { if (this.rows.length > 1) this.rows.splice(i, 1); },
         grandTotal() {
-            return this.rows.reduce((sum, r) => {
-                const j = Number(r.jumlah || 0);
-                const h = Number(r.harga_satuan || 0);
-                return sum + (j * h);
-            }, 0);
+            return this.rows.reduce((sum, r) => sum + (Number(r.jumlah||0) * Number(r.harga_satuan||0)), 0);
         },
-        formatRupiah(n) {
-            n = Number(n || 0);
-            return 'Rp ' + n.toLocaleString('id-ID', { maximumFractionDigits: 0 });
-        },
+        formatRupiah(n) { return 'Rp ' + Number(n||0).toLocaleString('id-ID', { maximumFractionDigits: 0 }); },
         beforeSubmit() {
+            if (this.grandTotal() != this.totalRab) {
+                alert('Total Realisasi harus SAMA PERSIS dengan Total RAB!');
+                return false;
+            }
             return true;
         }
     }

@@ -40,9 +40,9 @@ class LpjController extends Controller
         foreach ($validated['items'] as $it) {
             $totalRealisasi += (int)$it['jumlah'] * (float)$it['harga_satuan'];
         }
-        if ($totalRealisasi > (float) $lpj->pengajuan->total_rab) {
+        if ($totalRealisasi != (float) $lpj->pengajuan->total_rab) {
             return back()->withErrors([
-                'total_realisasi' => 'Total realisasi tidak boleh melebihi total RAB yang disetujui.'
+                'total_realisasi' => 'Total realisasi harus SAMA PERSIS dengan RAB (Rp ' . number_format($lpj->pengajuan->total_rab, 0, ',', '.') . ').'
             ])->withInput();
         }
 
@@ -156,7 +156,7 @@ class LpjController extends Controller
         if ($pengajuan->lpj) {
             return redirect()->route('mahasiswa.lpj.index')
                          ->with('warning', 'LPJ untuk kegiatan ini sudah pernah dibuat.');
-    }
+        }
         
         return view('mahasiswa.lpj.create', compact('pengajuan'));
     }
@@ -188,8 +188,11 @@ class LpjController extends Controller
         foreach ($request->items as $item) {
             $totalRealisasi += $item['jumlah'] * $item['harga_satuan'];
         }
-        if ($totalRealisasi > $pengajuan->total_rab) {
-            return back()->withErrors(['total_realisasi' => 'Total realisasi tidak boleh melebihi total RAB yang disetujui.'])->withInput();
+
+        if ($totalRealisasi != $pengajuan->total_rab) {
+            return back()->withErrors([
+                'total_realisasi' => 'Total realisasi harus SAMA PERSIS dengan RAB (Rp ' . number_format($pengajuan->total_rab, 0, ',', '.') . '). Jika ada sisa, masukkan sebagai item "Pengembalian Sisa Dana".'
+            ])->withInput();
         }
 
         DB::beginTransaction();

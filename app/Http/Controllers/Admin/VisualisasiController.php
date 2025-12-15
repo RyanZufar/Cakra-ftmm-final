@@ -57,8 +57,13 @@ class VisualisasiController extends Controller
             $revisi = $items->where('is_revisi', true)->count();
             $rasio = $total > 0 ? round(($revisi / $total) * 100, 1) : 0;
             $label = 'Needs Improvement';
-            if ($rasio < 15) $label = 'Excellent';
-            elseif ($rasio < 30) $label = 'Good';
+
+            if ($rasio >= 40) {
+                $label = 'Excellent';
+            } 
+            elseif ($rasio >= 15) {
+                $label = 'Good';
+            }
 
             return (object) [
                 'name' => $user->name,
