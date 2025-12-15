@@ -329,7 +329,7 @@
         
         <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <span class="material-icons">dashboard</span>
-            <span class="nav-text">Dashboard</span>
+            <span class="nav-text">Home</span>
         </a>
         
         <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">

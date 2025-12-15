@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analisis Aktivitas - Admin CAKRA</title>
     
-    {{-- CSS & Plugins --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -13,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
     <style>
-        /* --- 1. CONFIG GLOBAL (SAMA PERSIS DASHBOARD) --- */
         :root {
             --primary: #073763;
             --accent: #741847;
@@ -137,7 +135,7 @@
         
         <a href="{{ route('admin.dashboard') }}" class="nav-item">
             <span class="material-icons">dashboard</span>
-            <span class="nav-text">Dashboard</span>
+            <span class="nav-text">Home</span>
         </a>
         <a href="{{ route('admin.users.index') }}" class="nav-item">
             <span class="material-icons">people</span>
@@ -248,43 +246,36 @@
 
             <div class="glass-card p-6">
                 <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-4 border-l-2 border-[#741847] pl-3">Detail Kinerja & Efisiensi</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-slate-500 text-xs uppercase tracking-wider border-b border-white/5">
-                                <th class="pb-3 pl-2 font-semibold">Petugas</th>
-                                <th class="pb-3 font-semibold">Total Aksi</th>
-                                <th class="pb-3 font-semibold">Jml. Revisi</th>
-                                <th class="pb-3 font-semibold">Rasio</th>
-                                <th class="pb-3 text-center font-semibold">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm text-slate-300">
-                            @foreach($kinerjaPetugas as $petugas)
-                            <tr class="hover:bg-white/5 transition border-b border-white/5 last:border-0">
-                                <td class="py-3 pl-2 font-medium text-white">{{ $petugas->name }}</td>
-                                <td class="py-3">{{ $petugas->total_screening }}</td>
-                                <td class="py-3 text-red-300">{{ $petugas->jumlah_revisi }}</td>
-                                <td class="py-3">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-16 bg-slate-700 rounded-full h-1.5">
-                                            <div class="{{ $petugas->rasio_revisi < 15 ? 'bg-green-500' : ($petugas->rasio_revisi < 30 ? 'bg-yellow-500' : 'bg-[#741847]') }} h-1.5 rounded-full" style="width: {{ min($petugas->rasio_revisi, 100) }}%"></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-slate-500 text-xs uppercase tracking-wider border-b border-white/5">
+                                    <th class="pb-3 pl-2 font-semibold">Petugas</th>
+                                    <th class="pb-3 font-semibold">Total Screening</th>
+                                    <th class="pb-3 font-semibold">Jml. Revisi</th>
+                                    <th class="pb-3 font-semibold">Rasio Revisi/Screening</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-slate-300">
+                                @foreach($kinerjaPetugas as $petugas)
+                                <tr class="hover:bg-white/5 transition border-b border-white/5 last:border-0">
+                                    <td class="py-3 pl-2 font-medium text-white">{{ $petugas->name }}</td>
+                                    <td class="py-3">{{ $petugas->total_screening }}</td>
+                                    <td class="py-3 text-red-300">{{ $petugas->jumlah_revisi }}</td>
+                                    <td class="py-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-24 bg-slate-700 rounded-full h-1.5">
+                                                <div class="{{ $petugas->rasio_revisi < 15 ? 'bg-green-500' : ($petugas->rasio_revisi < 30 ? 'bg-yellow-500' : 'bg-[#741847]') }} h-1.5 rounded-full" style="width: {{ min($petugas->rasio_revisi, 100) }}%"></div>
+                                            </div>
+                                            <span class="text-[10px] text-slate-400">{{ $petugas->rasio_revisi }}%</span>
                                         </div>
-                                        <span class="text-[10px] text-slate-400">{{ $petugas->rasio_revisi }}%</span>
-                                    </div>
-                                </td>
-                                <td class="py-3 text-center">
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide 
-                                        {{ $petugas->label == 'Excellent' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
-                                          ($petugas->label == 'Good' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20') }}">
-                                        {{ $petugas->label }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
             </div>
 
         </div> 
