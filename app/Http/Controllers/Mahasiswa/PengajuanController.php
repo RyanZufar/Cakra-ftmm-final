@@ -120,7 +120,17 @@ class PengajuanController extends Controller
             abort(403, 'AKSES DITOLAK: Anda tidak memiliki akses ke pengajuan ini.');
         }
 
-        $pengajuan->load(['user', 'ormawa', 'status', 'itemsRab', 'historiStatus.status', 'historiStatus.user']);
+        $pengajuan->load([
+            'user', 
+            'ormawa', 
+            'status', 
+            'itemsRab', 
+            'historiStatus' => function ($query) {
+                $query->orderBy('histori_id', 'desc'); 
+            },
+            'historiStatus.status', 
+            'historiStatus.user'
+        ]);
         return view('mahasiswa.pengajuan.show', compact('pengajuan'));
     }
 

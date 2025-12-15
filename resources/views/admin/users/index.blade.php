@@ -9,21 +9,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        /* --- ROOT VARIABLES --- */
-        :root { --primary: #073763; --accent: #741847; --bg-dark: #0A192F; --text-dark: #E0E6F1; --subtext-dark: #94A3B8; }
+        :root {
+            --primary: #073763;
+            --accent: #741847;
+            --bg-dark: #0A192F;
+            --text-dark: #E0E6F1;
+            --subtext-dark: #94A3B8;
+        }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
         
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-dark);
             min-height: 100vh;
-            display: flex;
             background-image: radial-gradient(circle at 20% 80%, rgba(116, 24, 71, 0.15) 0%, transparent 50%),
                               radial-gradient(circle at 80% 20%, rgba(7, 55, 99, 0.15) 0%, transparent 50%);
         }
     
-        /* --- SIDEBAR STYLE --- */
         .sidebar {
             width: 250px;
             background: rgba(7, 55, 99, 0.1);
@@ -32,123 +45,276 @@
             padding: 20px 0;
             height: 100vh;
             position: fixed;
+            top: 0;
+            left: 0;
             overflow-y: auto;
+            overflow-x: hidden;
             transition: all 0.3s ease;
             z-index: 100;
         }
         
-        .logo { padding: 0 20px 20px; border-bottom: 1px solid rgba(116, 24, 71, 0.2); margin-bottom: 20px; }
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(116, 24, 71, 0.2);
+            margin-bottom: 20px;
+        }
+
         .logo h1 {
-            font-size: 1.5rem; font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 700;
             background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .nav-item {
-            padding: 12px 20px; display: flex; align-items: center; color: var(--subtext-dark);
-            text-decoration: none; transition: all 0.3s ease; border-left: 3px solid transparent; cursor: pointer;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--subtext-dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
         }
+
         .nav-item:hover, .nav-item.active {
             background: linear-gradient(90deg, rgba(7, 55, 99, 0.2), rgba(116, 24, 71, 0.1));
-            color: var(--text-dark); border-left: 3px solid var(--accent); transform: translateX(5px);
+            color: var(--text-dark);
+            border-left: 3px solid var(--accent);
+            transform: translateX(5px);
         }
-        .nav-item .material-icons { margin-right: 10px; font-size: 20px; transition: all 0.3s ease; }
-        .nav-item:hover .material-icons { color: var(--accent); transform: scale(1.1); }
+
+        .nav-item .material-icons {
+            margin-right: 10px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .material-icons {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
     
-        /* --- CONTENT STYLE --- */
-        .main-content { flex: 1; margin-left: 250px; padding: 30px; overflow-y: auto; transition: all 0.3s ease; }
+        .main-content { 
+            margin-left: 250px;
+            padding: 30px; 
+            width: calc(100% - 250px);
+            min-height: 100vh;
+            transition: all 0.3s ease; 
+        }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .user-info { display: flex; align-items: center; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
         
         .avatar {
-            width: 50px; height: 50px; border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            display: flex; align-items: center; justify-content: center;
-            margin-right: 15px; border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            border: 2px solid var(--accent);
         }
         
-        .user-details h2 { font-size: 1.5rem; font-weight: 600; }
-        .user-details p { color: var(--subtext-dark); font-size: 0.9rem; }
-        
-        /* --- TABLE CARD STYLE --- */
-        .card {
-            background: rgba(7, 55, 99, 0.1); backdrop-filter: blur(10px);
-            border: 1px solid rgba(116, 24, 71, 0.2); border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;
+        .user-details h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
         }
 
-        table { width: 100%; border-collapse: collapse; }
+        .user-details p {
+            color: var(--subtext-dark);
+            font-size: 0.9rem;
+        }
+        
+        .card {
+            background: rgba(7, 55, 99, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(116, 24, 71, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
         th {
             background: rgba(7, 55, 99, 0.3);
-            color: var(--text-dark); padding: 15px; text-align: left; font-size: 0.9rem;
+            color: var(--text-dark);
+            padding: 15px;
+            text-align: left;
+            font-size: 0.9rem;
             border-bottom: 1px solid rgba(116, 24, 71, 0.3);
         }
-        td {
-            padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--subtext-dark); font-size: 0.9rem;
-        }
-        tr:hover { background: rgba(255, 255, 255, 0.05); }
 
-        /* --- BADGES & BUTTONS --- */
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-        .badge-admin { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border: 1px solid rgba(220, 38, 38, 0.3); }
-        .badge-mahasiswa { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .badge-staf { background: rgba(147, 51, 234, 0.2); color: #d8b4fe; border: 1px solid rgba(147, 51, 234, 0.3); }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--subtext-dark);
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: rgba(220, 38, 38, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        .badge-mahasiswa {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-staf {
+            background: rgba(147, 51, 234, 0.2);
+            color: #d8b4fe;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+        }
 
         .btn-edit { 
-            background: transparent; border: 1px solid var(--accent); color: var(--accent); 
-            padding: 5px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.3s; 
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent); 
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s; 
         }
-        .btn-edit:hover { background: var(--accent); color: white; }
 
-        /* --- MODAL ANIMATIONS & STYLE --- */
+        .btn-edit:hover {
+            background: var(--accent);
+            color: white;
+        }
+
         .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: hidden;
-            background-color: rgba(10, 25, 47, 0.8); backdrop-filter: blur(8px);
-            transition: all 0.3s ease; opacity: 0;
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(10, 25, 47, 0.8);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            opacity: 0;
         }
 
         .modal.show {
-            display: flex; align-items: center; justify-content: center; opacity: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
         }
 
         .modal-content {
             background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid rgba(116, 24, 71, 0.3); width: 90%; max-width: 480px;
-            border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(116, 24, 71, 0.3);
+            width: 90%;
+            max-width: 480px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .modal.show .modal-content { transform: scale(1); }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
 
-        /* Dropdown Slide Animation */
         #ormawaField {
-            max-height: 0; opacity: 0; overflow: hidden;
-            transition: all 0.4s ease-in-out; transform: translateY(-10px);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+            transform: translateY(-10px);
         }
         #ormawaField.visible {
-            max-height: 200px; opacity: 1; transform: translateY(0); margin-top: 1rem;
+            max-height: 200px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-top: 1rem;
         }
 
-        /* Input Focus Glow */
         .input-interactive:focus {
-            border-color: #741847; box-shadow: 0 0 0 4px rgba(116, 24, 71, 0.2); transform: translateY(-2px);
+            border-color: #741847;
+            box-shadow: 0 0 0 4px rgba(116, 24, 71, 0.2);
+            transform: translateY(-2px);
         }
 
-        /* Mobile Toggle */
-        .menu-toggle { display: none; }
+        .menu-toggle {
+            display: none;
+        }
+
         @media (max-width: 768px) {
-            .sidebar { width: 70px; transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); }
-            .sidebar .logo h1, .sidebar .nav-text { display: none; }
-            .nav-item { justify-content: center; padding: 15px 0; }
-            .nav-item .material-icons { margin-right: 0; }
-            .main-content { margin-left: 0; padding: 15px; }
+            .sidebar {
+                width: 70px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar .logo h1, .sidebar .nav-text {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+
+            .nav-item .material-icons {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
             .menu-toggle {
-                display: block; position: fixed; top: 15px; left: 15px; z-index: 1000;
-                background: var(--primary); color: white; border: none; border-radius: 5px; padding: 8px;
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1000;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 8px;
             }
         }
     </style>
@@ -171,13 +337,9 @@
             <span class="nav-text">Kelola User</span>
         </a>
 
-        <a href="#" class="nav-item">
-            <span class="material-icons">groups</span>
-            <span class="nav-text">Data Ormawa</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span class="material-icons">settings</span>
-            <span class="nav-text">Pengaturan</span>
+        <a href="{{ route('admin.visualisasi') }}" class="nav-item {{ request()->routeIs('admin.visualisasi') ? 'active' : '' }}">
+            <span class="material-icons">insights</span>
+            <span class="nav-text">Visualisasi Data</span>
         </a>
         
         <a href="{{ route('logout') }}" class="nav-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

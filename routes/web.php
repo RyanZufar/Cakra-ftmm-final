@@ -8,6 +8,8 @@ use App\Http\Controllers\StafOrmawa\ScreeningController;
 use App\Http\Controllers\StafFakultas\VerifikasiController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\StafFakultas\FactDanaController;
+use App\Http\Controllers\StafFakultas\FactPengajuanController;
 
 Route::get('/', function () {
     return view('landing');
@@ -63,11 +65,15 @@ Route::middleware(['auth'])->prefix('staf-fakultas')->name('staf_fakultas.')->gr
     Route::put('/verifikasi/rab/{pengajuan}', [VerifikasiController::class, 'updateStatus'])->name('verifikasi.update');
     Route::get('/verifikasi/lpj/{lpj}', [VerifikasiController::class, 'showLpj'])->name('verifikasi.lpj.show');
     Route::put('/verifikasi/lpj/{lpj}', [VerifikasiController::class, 'updateLpjStatus'])->name('verifikasi.lpj.update');
+    Route::get('/analisis-pengajuan', [FactPengajuanController::class, 'index'])->name('analisis_pengajuan'); 
+    Route::get('/analisis-dana', [FactDanaController::class, 'index'])->name('analisis_dana');
 });
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::get('/visualisasi', [\App\Http\Controllers\Admin\VisualisasiController::class, 'index'])
+        ->name('visualisasi');
 });
 
 require __DIR__.'/auth.php';

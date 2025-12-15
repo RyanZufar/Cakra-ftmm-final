@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ormawa extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
     protected $table = 'ormawa';
     protected $primaryKey = 'ormawa_id';
     protected $fillable = ['nama_ormawa'];

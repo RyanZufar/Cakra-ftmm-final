@@ -9,36 +9,10 @@ use App\Models\HistoriStatus;
 use App\Models\Lpj;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
 
 class VerifikasiController extends Controller
 {
-    public function updateStatus(Request $request, Pengajuan $pengajuan)
-    {
-        $request->validate(['action' => 'required|in:setuju,revisi']);
-        $action = $request->input('action');
-
-        $newStatus = $action === 'setuju'
-            ? Status::where('nama_status', 'Disetujui')->firstOrFail()
-            : Status::where('nama_status', 'Revisi')->firstOrFail();
-
-        $pengajuan->status()->associate($newStatus);
-        $pengajuan->save();
-
-        HistoriStatus::create([
-            'pengajuan_id' => $pengajuan->pengajuan_id,
-            'status_id' => $newStatus->status_id,
-            'diubah_oleh_user_id' => Auth::id(),
-        ]);
-
-        return redirect()->route('staf_fakultas.dashboard')
-            ->with('success', $action === 'setuju'
-                ? 'Pengajuan telah disetujui.'
-                : 'Pengajuan telah dikembalikan untuk revisi.');
-    }
-    
     public function dashboard()
     {
         $user = Auth::user();
@@ -65,6 +39,32 @@ class VerifikasiController extends Controller
         ];
 
         return view('staf_fakultas.dashboard', compact('user', 'antrianRab', 'antrianLpj', 'stats'));
+    }
+
+    public function updateStatus(Request $request, Pengajuan $pengajuan)
+    {
+        $request->validate(['action' => 'required|in:setuju,revisi']);
+        $action = $request->input('action');
+
+        $newStatus = $action === 'setuju'
+            ? Status::where('nama_status', 'Disetujui')->firstOrFail()
+            : Status::where('nama_status', 'Revisi')->firstOrFail();
+
+        $pengajuan->status()->associate($newStatus);
+        $pengajuan->save();
+
+        HistoriStatus::create([
+            'pengajuan_id' => $pengajuan->pengajuan_id,
+            'status_id' => $newStatus->status_id,
+            'diubah_oleh_user_id' => Auth::id(),
+            'timestamp' => now(),
+            'komentar' => $request->input('komentar'),
+        ]);
+
+        return redirect()->route('staf_fakultas.dashboard')
+            ->with('success', $action === 'setuju'
+                ? 'Pengajuan telah disetujui.'
+                : 'Pengajuan telah dikembalikan untuk revisi.');
     }
 
     public function showRab(Pengajuan $pengajuan)
@@ -96,9 +96,7 @@ class VerifikasiController extends Controller
                 ->with('info', 'LPJ ini sudah disetujui sebelumnya.');
         }
 
-        $request->validate([
-            'action' => 'required|in:setuju',
-        ]);
+        $request->validate(['action' => 'required|in:setuju']);
 
         DB::transaction(function () use ($lpj) {
             $lpj->status_lpj = 'Disetujui';
@@ -119,6 +117,7 @@ class VerifikasiController extends Controller
                 'status_id'           => $statusSelesai->status_id,
                 'diubah_oleh_user_id' => Auth::id(),
                 'komentar'            => 'LPJ disetujui oleh Staf Fakultas; pengajuan dinyatakan selesai.',
+                'timestamp'           => now(),
             ]);
         });
 
@@ -126,5 +125,4 @@ class VerifikasiController extends Controller
             ->route('staf_fakultas.dashboard')
             ->with('success', 'LPJ disetujui dan Pengajuan dinyatakan Selesai.');
     }
-
 }
