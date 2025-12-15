@@ -1,13 +1,14 @@
 # Notes Project
 
 ## Identitas Kelompok
-- **Nomor Kelompok**: [Isi Nomor Kelompok]
-- **Judul Project**: [Isi Judul Project]
+- **Nomor Kelompok**: Kelompok K
+- **Judul Project**: Cakra FTMM
 - **Nama Anggota Kelompok**:
-  1. [Isi Nama Anggota 1]
-  2. [Isi Nama Anggota 2]
-  3. [Isi Nama Anggota 3]
-  4. [Isi Nama Anggota 4]
+  1. MUHAMMAD FAZIL IRVAN PUTRA (164231022)
+  2. RICHARD RAFFAEL DWI NANDA (164231023)
+  3. RACHMA NABILA PUTRI (164231073)
+  4. RYAN ZUFAR AHMADI (164231096)
+  5. MELDA JESICA TELSYE SALAKA (164231108)
 
 ## List Library yang Digunakan
 
